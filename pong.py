@@ -1,7 +1,6 @@
 import pygame
 from pygame import Rect
 from random import randint
-from time import sleep
 
 
 # COLORS
@@ -18,7 +17,6 @@ class Entity():
         self.height = height
         self.colour = colour     
 
-
 def text_display(text, color,x,y):
     font = pygame.font.SysFont(None, 24)
     font_render = font.render(text, True, color)
@@ -27,14 +25,15 @@ def text_display(text, color,x,y):
 def main_loop(win_height, win_width):
     running = True
 
-    player_1 = Entity(10, 0, 10, 50, blue)
-    player_2 = Entity(win_width - 20, 0, 10, 50, red)
+    player_1 = Entity(10, 225, 10, 50, blue)
+    player_2 = Entity(win_width - 20, 225, 10, 50, red)
     ball = Entity(win_height/2, win_width/2, 10, 10, white)
 
-    player_speed = 25
+    player_speed = 10
     ball_x_speed = 10
     ball_y_speed = 0
 
+    hit_sound = pygame.mixer.Sound('hit.wav')
     score_counter = 0
 
     while running:
@@ -77,6 +76,7 @@ def main_loop(win_height, win_width):
         pl_2_pos = (ball.x == player_2.x - 10 and (ball.y >= player_2.y and ball.y <= (player_2.y + player_2.height)))
         
         if pl_1_pos or pl_2_pos:
+            hit_sound.play()
             ball_x_speed = - ball_x_speed
             ball_y_speed = randint(1,10)
 
@@ -93,22 +93,20 @@ def main_loop(win_height, win_width):
             text_display('Player 2 Wins', red, 230,230)
             ball_x_speed = 0
             ball_y_speed = 0
-            sleep(2)
-
         elif ball.x > player_2.x + 10:
             text_display('Player 1 Wins', blue, 230,230)
             ball_x_speed = 0
             ball_y_speed = 0
-            sleep(2)
-        
+
         # SCORE COUNTER
-        text_display(f'Score: {score_counter}',white,win_width/2,10)
+        text_display(f'Score: {score_counter}',white,225,10)
         pygame.display.update()
 
     pygame.quit()
 
 
 pygame.init()
+pygame.mixer.init()
 
 win_width = 500
 win_height = 500
