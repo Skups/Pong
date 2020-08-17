@@ -3,6 +3,8 @@ from pygame import Rect
 from random import randint
 from time import sleep
 
+
+# COLORS
 white = (255,255,255)
 blue = (100,100,255)
 red = (255,100,100)
@@ -14,18 +16,13 @@ class Entity():
         self.y = y
         self.width = width
         self.height = height
-        self.colour = colour
-        
-        
-    def rects(self, obj):
-        self.rect = obj
+        self.colour = colour     
+
 
 def text_display(text, color,x,y):
     font = pygame.font.SysFont(None, 24)
     font_render = font.render(text, True, color)
     window.blit(font_render,(x,y))
-
-
 
 def main_loop(win_height, win_width):
     running = True
@@ -40,10 +37,6 @@ def main_loop(win_height, win_width):
 
     score_counter = 0
 
-    clock = pygame.time.Clock()
-    
-    
-
     while running:
         pygame.time.delay(100)
 
@@ -54,20 +47,18 @@ def main_loop(win_height, win_width):
         keys = pygame.key.get_pressed()
 
         # PLAYER ONE CONTROLS
-
         if keys[pygame.K_w] and player_1.y > 0:
             player_1.y -= player_speed
         elif keys[pygame.K_s] and player_1.y < win_height - player_1.height:
             player_1.y += player_speed
         
         # PLAYER TWO CONTROLS
-
         if keys[pygame.K_UP] and player_2.y > 0:
             player_2.y -= player_speed
         elif keys[pygame.K_DOWN] and player_2.y < win_height - player_2.height:
             player_2.y += player_speed
 
-
+        # DISPLAY THE ENTITIES
         player_1_rect = Rect(player_1.x, player_1.y, player_1.width, player_1.height)
         player_2_rect = Rect(player_2.x, player_2.y, player_2.width, player_2.height)
         ball_rect = Rect(ball.x, ball.y, ball.width, ball.height)
@@ -79,9 +70,6 @@ def main_loop(win_height, win_width):
         pygame.draw.rect(window, ball.colour, ball_rect)
 
         # BALL MOVEMENT
-
-        
-
         ball.x += ball_x_speed
         ball.y += ball_y_speed
 
@@ -91,6 +79,7 @@ def main_loop(win_height, win_width):
         if pl_1_pos or pl_2_pos:
             ball_x_speed = - ball_x_speed
             ball_y_speed = randint(1,10)
+
             if randint(1,3) == 1:
                 ball_y_speed = - ball_y_speed
 
@@ -98,8 +87,6 @@ def main_loop(win_height, win_width):
 
         if ball.y > win_height - 10 or ball.y < 0 + 10:
             ball_y_speed = - ball_y_speed
-
-
 
         # VICTORY SCREEN
         if ball.x < player_1.x - 10:
@@ -113,18 +100,22 @@ def main_loop(win_height, win_width):
             ball_x_speed = 0
             ball_y_speed = 0
             sleep(2)
-
-            
+        
+        # SCORE COUNTER
         text_display(f'Score: {score_counter}',white,win_width/2,10)
         pygame.display.update()
 
     pygame.quit()
 
+
 pygame.init()
 
 win_width = 500
 win_height = 500
+icon = pygame.image.load('icon.ico')
 
 window = pygame.display.set_mode((win_width, win_height))
+pygame.display.set_caption('Pong by Skups')
+pygame.display.set_icon(icon)
 
 main_loop(win_height, win_width)
