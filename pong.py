@@ -74,13 +74,9 @@ def main_loop(win_height, win_width):
 
         window.fill((0,0,0))
 
-        player_1_obj = pygame.draw.rect(window, player_1.colour, player_1_rect)
-        player_2_obj = pygame.draw.rect(window, player_2.colour, player_2_rect)
-        ball_obj = pygame.draw.rect(window, ball.colour, ball_rect)
-
-        # player_1.rects(player_1_obj)
-        # player_2.rects(player_2_obj)
-        # ball.rects(ball_obj)
+        pygame.draw.rect(window, player_1.colour, player_1_rect)
+        pygame.draw.rect(window, player_2.colour, player_2_rect)
+        pygame.draw.rect(window, ball.colour, ball_rect)
 
         # BALL MOVEMENT
 
@@ -110,45 +106,12 @@ def main_loop(win_height, win_width):
             text_display('Player 2 Wins', red, 230,230)
             ball_x_speed = 0
             ball_y_speed = 0
-            # text_display('Do you wanna play again ? y/n', white, 220, 325)
-
-            # while True:
-            #     if keys[pygame.K_y]:
-            #         player_1 = Entity(10, 0, 10, 50, blue)
-            #         player_2 = Entity(win_width - 20, 0, 10, 50, red)
-            #         ball = Entity(win_height/2, win_width/2, 10, 10, white)
-
-            #         player_speed = 25
-            #         ball_x_speed = 10
-            #         ball_y_speed = 0
-
-            #         score_counter = 0
-            #         break
-            #     elif keys[pygame.K_n]:
-            #         running = False
-            #         break
             sleep(2)
+
         elif ball.x > player_2.x + 10:
             text_display('Player 1 Wins', blue, 230,230)
             ball_x_speed = 0
             ball_y_speed = 0
-            # text_display('Do you wanna play again ? y/n', white, 220, 325)
-        
-            # if keys[pygame.K_y]:
-            #     player_1 = Entity(10, 0, 10, 50, blue)
-            #     player_2 = Entity(win_width - 20, 0, 10, 50, red)
-            #     ball = Entity(win_height/2, win_width/2, 10, 10, white)
-
-            #     player_speed = 25
-            #     ball_x_speed = 10
-            #     ball_y_speed = 0
-
-            #     score_counter = 0
-                
-            #     break
-            # elif keys[pygame.K_n]:
-            #     running = False
-            #     break
             sleep(2)
 
             
