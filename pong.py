@@ -5,6 +5,7 @@ from random import randint
 
 # COLORS
 white = (255,255,255)
+gray = (211,211,211)
 blue = (100,100,255)
 red = (255,100,100)
 
@@ -17,6 +18,7 @@ class Entity():
         self.height = height
         self.colour = colour     
 
+
 def text_display(text, color,x,y):
     font = pygame.font.SysFont(None, 24)
     font_render = font.render(text, True, color)
@@ -27,10 +29,13 @@ def main_loop(win_height, win_width):
 
     player_1 = Entity(10, 225, 10, 50, blue)
     player_2 = Entity(win_width - 20, 225, 10, 50, red)
-    ball = Entity(win_height/2, win_width/2, 10, 10, white)
+    ball = Entity(win_height//2, win_width//2, 10, 10, white)
 
-    player_speed = 10
-    ball_x_speed = 10
+    player_speed = 15
+    if randint(1,3) == 1:
+        ball_x_speed = -10
+    else:
+        ball_x_speed  = 10
     ball_y_speed = 0
 
     hit_sound = pygame.mixer.Sound('hit.wav')
@@ -38,12 +43,14 @@ def main_loop(win_height, win_width):
 
     while running:
         pygame.time.delay(100)
+        keys = pygame.key.get_pressed()
 
+        # QUIT
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            running = False
 
         # PLAYER ONE CONTROLS
         if keys[pygame.K_w] and player_1.y > 0:
@@ -56,6 +63,18 @@ def main_loop(win_height, win_width):
             player_2.y -= player_speed
         elif keys[pygame.K_DOWN] and player_2.y < win_height - player_2.height:
             player_2.y += player_speed
+
+        # RETRY
+        if keys[pygame.K_r]:
+            player_1 = Entity(10, 225, 10, 50, blue)
+            player_2 = Entity(win_width - 20, 225, 10, 50, red)
+            ball = Entity(win_height//2, win_width//2, 10, 10, white)
+            score_counter = 0
+            if randint(1,3) == 1:
+                ball_x_speed = -10
+            else:
+                ball_x_speed  = 10
+            ball_y_speed = 0
 
         # DISPLAY THE ENTITIES
         player_1_rect = Rect(player_1.x, player_1.y, player_1.width, player_1.height)
@@ -72,11 +91,10 @@ def main_loop(win_height, win_width):
         ball.x += ball_x_speed
         ball.y += ball_y_speed
 
-        pl_1_pos = (ball.x == player_1.x + 10 and (ball.y >= player_1.y and ball.y <= (player_1.y + player_1.height)))
-        pl_2_pos = (ball.x == player_2.x - 10 and (ball.y >= player_2.y and ball.y <= (player_2.y + player_2.height)))
+        pl_1_pos = (ball.x == player_1.x + 10 and (ball.y >= player_1.y - 5 and ball.y <= (player_1.y + player_1.height)))
+        pl_2_pos = (ball.x == player_2.x - 10 and (ball.y >= player_2.y - 5 and ball.y <= (player_2.y + player_2.height)))
         
         if pl_1_pos or pl_2_pos:
-            hit_sound.play()
             ball_x_speed = - ball_x_speed
             ball_y_speed = randint(1,10)
 
@@ -84,17 +102,21 @@ def main_loop(win_height, win_width):
                 ball_y_speed = - ball_y_speed
 
             score_counter += 1
+            hit_sound.play()
 
-        if ball.y > win_height - 10 or ball.y < 0 + 10:
+        if ball.y > 489 or ball.y < 0 + 10:
             ball_y_speed = - ball_y_speed
 
+
+        pl_1_win = ball.x > player_2.x + 10
+        pl_2_win = ball.x < player_1.x - 10
         # VICTORY SCREEN
-        if ball.x < player_1.x - 10:
-            text_display('Player 2 Wins', red, 230,230)
-            ball_x_speed = 0
-            ball_y_speed = 0
-        elif ball.x > player_2.x + 10:
-            text_display('Player 1 Wins', blue, 230,230)
+        if pl_1_win or pl_2_win :
+            if pl_2_win:
+                text_display('Player 2 Wins', red, 200,230)
+            elif pl_1_win:
+                text_display('Player 1 Wins', blue, 200,230)
+            text_display('Press "R" to play again', gray, 160, 250)
             ball_x_speed = 0
             ball_y_speed = 0
 
